@@ -3,4 +3,4 @@ const config = {
     tokenAddress: "KT1QqzwQcufYWP9Myg8MESZ6rWGGrwCW81gT"
 }
 
-export default config
+export default config 
