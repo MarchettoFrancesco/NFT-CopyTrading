@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 
 // Components
 import Navbar from "./components/Navbar";
-import { buyTicketOperation, endGameOperation } from "./utils/operation";
 import { fetchData } from "./utils/tzkt";
+import { collectNFT, mintNFT } from "./utils/tzkt";
 
 const App = () => {
   // Players holding lottery tickets
-  const [players, setPlayers] = useState([]);
-  const [tickets, setTickets] = useState(5);
+  const [data, setData] = useState([]);
+  const [token, setToken] = useState(5);
   const [loading, setLoading] = useState(false);
 
   // Set players and tickets remaining
@@ -16,16 +16,16 @@ const App = () => {
     // TODO 9 - Fetch players and tickets remaining from storage
     (async () => {
       const storage = await fetchData();
-      setPlayers(Object.values(storage.players));
-      setTickets(storage.tickets_available);
+      setData(Object.values(storage.data));
+      setToken(storage.token_id);
     })();
   }, []);
 
   // TODO 7.a - Complete onBuyTicket function
-  const onBuyTicket = async () => {
+  const oncollectNFT = async () => {
    try{ 
     setLoading(true);
-    await buyTicketOperation();
+    await collectNFT();
     alert("Transaction Confirmed!");
   } catch (err){
     alert("Transaction failed: ", err.message);
@@ -34,23 +34,28 @@ const App = () => {
   };
 
   // TODO 11.a - Complete onEndGame function
-  const onEndGame = async () => {
+  const onmintNFT = async () => {
     try{ 
       setLoading(true);
-      await endGameOperation();
+      await mintNFT();
       alert("Transaction Confirmed!");
     } catch (err){
-      alert(err.message);
+      alert("Transaction failed: ", err.message);
     }
       setLoading(false);
   };
 
+  useEffect(()=>{
+    dispatch(fetchData());
+},[Tezos, dispatch]);
+
+// sistemare ui e accesso dati contratto
   return (
     <div className="h-100">
       <Navbar />
       <div className="d-flex flex-column justify-content-center align-items-center h-100">
         {/* Ticket remaining display */}
-        <div className="py-1">Tickets remaining: {tickets}</div>
+        <div className="py-1"></div>
         {/* Action Buttons */}
         {tickets > 0 ? (
           <button onClick={onBuyTicket} className="btn btn-primary btn-lg">

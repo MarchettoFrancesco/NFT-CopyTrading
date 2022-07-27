@@ -1,4 +1,6 @@
 // TODO 8 - Fetch storage of the Lottery by completing fetchStorage
+
+import { tezos } from "./tezos";
 import axios from "axios";
 import config from "../config";
 
