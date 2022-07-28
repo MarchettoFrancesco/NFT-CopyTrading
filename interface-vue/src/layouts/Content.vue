@@ -46,7 +46,15 @@
               {{ icons.mdiBellOutline }}
             </v-icon>
           </v-btn>
-          <app-bar-user-menu></app-bar-user-menu>
+          <v-btn 
+          color="primary"
+          class="ms-3"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Connect Wallet
+        </v-btn>
         </div>
       </div>
     </v-app-bar>
