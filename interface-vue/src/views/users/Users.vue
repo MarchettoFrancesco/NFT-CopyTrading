@@ -1,19 +1,33 @@
 <template>
+<v-container>
   <v-card>
     <div class="d-flex flex-sm-row flex-column">
       <div class="flex-grow-1">
-        <v-card-title>
-          <span class="me-3">Top Sellers</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
+      <v-card-title>
+<v-row no-glutters>
+      <v-col cols="2" class="text-center"> Follow </v-col>
+      <v-col cols="4"> Top Sellers</span> </v-col>
+      <v-col cols="6" class="text-right">Amount sold in XTZ:</v-col>
+</v-row>
+</v-card-title>
+        
 
         <v-card-text>
           <v-list>
+          <v-divider Inset
+            ></v-divider>
             <v-list-item
               v-for="(data, index) in topSellers"
               :key="data.id"
               :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
-            >
+            > 
+            
+            <v-switch
+              v-model="singleSelect"
+              label=""
+              class="pa-3"
+            ></v-switch>
+            
               <v-img
                 contain
                 max-height="30"
@@ -43,17 +57,26 @@
 
       <div class="flex-grow-1">
         <v-card-title>
-          <span class="me-3">Top Buyers</span>
-          <v-spacer></v-spacer>
-        </v-card-title>
+          <v-row no-glutters>
+            <v-col cols="2" class="text-center"> Follow </v-col>
+            <v-col cols="4"> Top Buyers</span> </v-col>
+            <v-col cols="6" class="text-right">Amount bought in XTZ:</v-col>
+          </v-row>
+          </v-card-title>
 
         <v-card-text>
-          <v-list>
+          <v-list><v-divider Inset
+            ></v-divider>
             <v-list-item
               v-for="(data, index) in topBuyers"
               :key="data.id"
               :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
             >
+            <v-switch
+               v-model="singleSelect"
+               label=""
+               class="pa-3"
+             ></v-switch>
               <v-img
                 max-height="30"
                 max-width="30"
@@ -76,6 +99,8 @@
       </div>
     </div>
   </v-card>
+  </v-row>
+  </v-container>
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'
