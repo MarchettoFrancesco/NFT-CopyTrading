@@ -49,7 +49,7 @@ const App = () => {
     dispatch(fetchData());
 },[Tezos, dispatch]);
 
-// sistemare ui e accesso dati contratto
+// sistemare ui e accesso dati contratto, prova
   return (
     <div className="h-100">
       <Navbar />
