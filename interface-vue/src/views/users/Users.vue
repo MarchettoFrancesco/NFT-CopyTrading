@@ -22,9 +22,9 @@
               :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
             > 
             
-            <v-switch
-              v-model="singleSelect"
-              label=""
+            <v-switch 
+              v-model="singleSelect[data.subject.address]"
+              @click="select"
               class="pa-3"
             ></v-switch>
             
@@ -73,9 +73,10 @@
               :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
             >
             <v-switch
-               v-model="singleSelect"
-               label=""
+               v-model="singleSelect[data.subject.address]"
                class="pa-3"
+               @click="select"
+
              ></v-switch>
               <v-img
                 max-height="30"
@@ -109,25 +110,44 @@ import { API } from '/src/utils/API.js'
 export default defineComponent({
   data() {
     return {
+      singleSelect: {},
       topBuyers: [],
       topSellers: [],
     }
   },
+    mounted(){
+      if(localStorage.singleSelect){
+        this.singleSelect = JSON.parse(localStorage.singleSelect);
+       }
+    },
+    watch: {
+      singleSelect(NewValue) {
+        localStorage.singleSelect = JSON.stringify(NewValue);
+      }
+    },
   methods: {
     mapUser(user) {
       if (!user?.subject?.logo) user.subject.logo = `https://services.tzkt.io/v1/avatars2/${user?.subject?.address}`
       if (!user?.subject?.alias) user.subject.alias = user?.subject?.address
+      if(!this.singleSelect.hasOwnProperty(user.subject.address))
+          this.singleSelect[user.subject.address]= false
       return user
     },
+    select(){
+      this.singleSelect= {...this.singleSelect}
+    }
   },
   created() {
     API.users
       .getTopBuyers()
-      .then(buyers => buyers.map(buyer => this.mapUser(buyer)))
-      .then(res => (this.topBuyers = res)),
+      .then(buyers => buyers.map(buyer =>
+         this.mapUser(buyer)
+        ))
+      .then(res => {(this.topBuyers = res)}),
     API.users
       .getTopSellers()
-      .then(sellers => sellers.map(seller => this.mapUser(seller)))
+      .then(sellers => sellers.map(seller => 
+         this.mapUser(seller)))
       .then(res => (this.topSellers = res))
   },
 })
