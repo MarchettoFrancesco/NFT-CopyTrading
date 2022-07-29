@@ -57,6 +57,47 @@ const users = {
     //     "__typename": "sales_stat"
     //   }
   }),
+  getEventsLive: () => new Promise((resolve, reject) => {
+    fetch("https://api2.objkt.com/v1/graphql", {
+     ...options,
+     body:
+      '{\"operationName\":\"getEventsLive\",\"variables\":{\"order_by\":[{\"timestamp\":\"desc\"},{\"id\":\"desc\"}],\"limit\":100,\"offset\":0,\"where\":{\"timestamp\":{\"_is_null\":false},\"_or\":[{\"creator_address\":{\"_eq\":\"tz1Rz8kTK5oBEpiBQzKnp7h7Sh5BkUwJQtK1\"}},{\"recipient_address\":{\"_eq\":\"tz1Rz8kTK5oBEpiBQzKnp7h7Sh5BkUwJQtK1\"}}]}},\"query\":\"query getEventsLive($where: event_bool_exp!, $order_by: [event_order_by!] = {}, $limit: Int = 100, $offset: Int = 0) {\\n  event(where: $where, order_by: $order_by, limit: $limit, offset: $offset) {\\n    ...EventLive\\n    __typename\\n  }\\n}\\n\\nfragment EventLive on event {\\n  id\\n  amount\\n  price\\n  event_type\\n  timestamp\\n  token_pk\\n  fa_contract\\n  ophash\\n  fa {\\n    ...FaMinimal\\n    __typename\\n  }\\n  token {\\n    ...TokenLive\\n    __typename\\n  }\\n  creator {\\n    ...UserLight\\n    __typename\\n  }\\n  recipient {\\n    ...UserLight\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment FaMinimal on fa {\\n  contract\\n  name\\n  path\\n  collection_type\\n  collection_id\\n  __typename\\n}\\n\\nfragment TokenLive on token {\\n  pk\\n  token_id\\n  artifact_uri\\n  display_uri\\n  thumbnail_uri\\n  fa_contract\\n  mime\\n  __typename\\n}\\n\\nfragment UserLight on holder {\\n  address\\n  alias\\n  logo\\n  tzdomain\\n  __typename\\n}\\n\"}',
+    })
+    .then(res => res.json())
+    .then(res => resolve(res.data.event))
+    .catch(err => reject(err))
+    
+    // data: {event: [,…]}
+    // event: [,…]
+    // 0: {id: 29387086, amount: 1, price: null, event_type: "transfer", timestamp: "2022-07-29T09:01:29+00:00",…}
+    // amount: 1
+    // creator: {address: "tz1NBZbCJG5rvVPW83LcD53UPg11vZug8FRc", alias: "ineedbeer",…}
+    // event_type: "transfer"
+    // fa: {
+      // collection_id: null
+      // collection_type: "open"
+      // contract: "KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton"
+      // name: "hic et nunc"
+      // path: "hicetnunc"
+      // __typename: "fa"
+    // fa_contract: "KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton"
+    // id: 29387086
+    // ophash: "opVQ6Re3HN3wbiycBYzqKi7zKT4RuLujx6G7cFadAeRWc8n3oKx"
+    // price: null
+    // recipient: {address: "tz1XTEx1VGj6pm7Wh2Ni2hKQCWYSBxjnEsE1", alias: null, logo: null, tzdomain: null,…}
+    // timestamp: "2022-07-29T09:01:29+00:00"
+    // token: {
+      // artifact_uri: "ipfs://QmSoh3rT3f2zx8vzB2wHuWtnFZQaoD6Gg2R21bqbcD3E6F"
+      // display_uri: "ipfs://Qmc788TQKqyEncSvkndiakFL95DP8D7LFyGdJ18YRcZvdB"
+      // fa_contract: "KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton"
+      // mime: "image/jpeg"
+      // pk: 1575133
+      // thumbnail_uri: "ipfs://QmNrhZHUaEqxhyLfqoq1mtHSipkWHeT31LNHb1QEbDHgnc"
+      // token_id: "111342"
+      // __typename: "token"}
+    // token_pk: 1575133
+    // __typename: "event"
+  }),
 }
 const options = {
   headers: {
