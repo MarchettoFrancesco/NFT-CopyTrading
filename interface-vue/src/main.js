@@ -9,12 +9,13 @@ import store from './store'
 Vue.config.productionTip = false
 
 Vue.filter('tezos', value => {
-  const val = (value / 1000000).toFixed(2)
+  const val = (value / 1000000)
+    .toFixed(2)
     .toString()
     .replace('.', ',')
     .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 
-  return val +" ꜩ"
+  return val + ' ꜩ'
 })
 new Vue({
   router,

@@ -2,19 +2,11 @@
   <v-app>
     <vertical-nav-menu :is-drawer-open.sync="isDrawerOpen"></vertical-nav-menu>
 
-    <v-app-bar
-      app
-      flat
-      absolute
-      color="transparent"
-    >
+    <v-app-bar app flat absolute color="transparent">
       <div class="boxed-container w-full">
         <div class="d-flex align-center mx-6">
           <!-- Left Content -->
-          <v-app-bar-nav-icon
-            class="d-block d-lg-none me-2"
-            @click="isDrawerOpen = !isDrawerOpen"
-          ></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon class="d-block d-lg-none me-2" @click="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
           <v-text-field
             rounded
             dense
@@ -37,24 +29,12 @@
             </v-icon>
           </a>
           <theme-switcher></theme-switcher>
-          <v-btn
-            icon
-            small
-            class="ms-3"
-          >
+          <v-btn icon small class="ms-3">
             <v-icon>
               {{ icons.mdiBellOutline }}
             </v-icon>
           </v-btn>
-          <v-btn 
-          color="primary"
-          class="ms-3"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-          Connect Wallet
-        </v-btn>
+          <v-btn color="primary" class="ms-3" dark @click="connectWallet"> Connect Wallet </v-btn>
         </div>
       </div>
     </v-app-bar>
@@ -65,29 +45,20 @@
       </div>
     </v-main>
 
-    <v-footer
-      app
-      inset
-      color="transparent"
-      absolute
-      height="56"
-      class="px-0"
-    >
+    <v-footer app inset color="transparent" absolute height="56" class="px-0">
       <div class="boxed-container w-full">
         <div class="mx-6 d-flex justify-space-between">
           <span>
             &copy; 2021
-            <a
-              href="https://themeselection.com"
-              class="text-decoration-none"
-              target="_blank"
-            >ThemeSelection</a></span>
+            <a href="https://themeselection.com" class="text-decoration-none" target="_blank">ThemeSelection</a></span
+          >
           <span class="d-sm-inline d-none">
             <a
               href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free/blob/main/LICENSE"
               target="_blank"
               class="text--secondary text-decoration-none"
-            >MIT Licence</a>
+              >MIT Licence</a
+            >
           </span>
         </div>
       </div>
@@ -100,20 +71,19 @@ import { ref } from '@vue/composition-api'
 import { mdiMagnify, mdiBellOutline, mdiGithub } from '@mdi/js'
 import VerticalNavMenu from './components/vertical-nav-menu/VerticalNavMenu.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
-import AppBarUserMenu from './components/AppBarUserMenu.vue'
+import { connectWallet, getAccount } from '../utils/wallet'
 
 export default {
   components: {
     VerticalNavMenu,
     ThemeSwitcher,
-    AppBarUserMenu,
   },
   setup() {
     const isDrawerOpen = ref(null)
 
     return {
       isDrawerOpen,
-
+      user: '',
       // Icons
       icons: {
         mdiMagnify,
@@ -121,6 +91,14 @@ export default {
         mdiGithub,
       },
     }
+  },
+  methods: {
+    connectWallet() {
+      console.log('connect wallet...')
+      connectWallet()
+        .then(() => getAccount())
+        .then(activeAccount => (this.user = activeAccount))
+    },
   },
 }
 </script>
