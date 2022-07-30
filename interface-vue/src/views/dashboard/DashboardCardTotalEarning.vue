@@ -14,11 +14,11 @@
     <v-card-text>
       <v-list>
         <v-divider Inset></v-divider>
-        <v-list-item v-for="(data, index) in eventsLive" :key="data.id"
+        <v-list-item v-for="(data, index) in eventsLive" :key="index"
           :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`">
-          <!-- <div class="d-flex align-center flex-grow-1 flex-wrap">
+          <div class="d-flex align-center flex-grow-1 flex-wrap">
             <div class="me-auto pe-2">
-              aaaaaaaaaaaa
+
               <h4 class="font-weight-semibold name-space" v-if="data.creator.alias">
                 {{ data.creator.alias }}
               </h4>
@@ -30,11 +30,11 @@
 
           <v-img contain max-height="30" max-width="30"
             :src="`https://ipfs.io/${data.token.thumbnail_uri.replace(':/', '')}`" class="me-3 rounded-circle">
-          </v-img> -->
-          aaaaa
+          </v-img> 
+          
         </v-list-item>
       </v-list>
-    </v-card-text>
+    </v-card-text> 
 
 
   </v-card>
