@@ -13,16 +13,65 @@
           {{ icons.mdiDotsVertical }}
         </v-icon>
       </v-btn>
+
     </v-card-title>
+    <v-card-text>
+      <v-list>
+        <v-divider Inset ></v-divider>
+        <v-list-item v-for="(data, index) in eventsLive"
+              :key="data.id"
+              :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
+            > 
+          <div class="d-flex align-center flex-grow-1 flex-wrap">
+                <div class="me-auto pe-2">
+                  <h4 class="font-weight-semibold name-space">
+                    {{ data.event_type }}
+                  </h4>
+                </div>
+              </div>
+              
+            <v-img
+                contain
+                max-height="30"
+                max-width="30"
+                :src="data.token.display_uri"
+                class="me-3 rounded-circle"
+              ></v-img>
+              
+            </v-list-item>
+      </v-list>
+    </v-card-text>
 
     
   </v-card>
 </template>
 
 <script>
+import { defineComponent } from '@vue/composition-api'
+import { API } from '/src/utils/API.js'
 import { mdiDotsVertical, mdiMenuUp } from '@mdi/js'
 
 export default {
+  data() {
+    return{
+      eventsLive: [],
+    }
+  },
+  methods: {
+    mapUser(user) {
+      
+      return user
+    },
+  },
+  created(){
+    API.users
+      .getEventsLive()
+      .then(events => events.map(event =>
+         this.mapUser(event)
+        ))
+      .then(res => {(this.eventsLive = res)})
+  },
+
   setup() {
     const totalEarning = [
       {

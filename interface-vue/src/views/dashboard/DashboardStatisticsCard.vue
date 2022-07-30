@@ -15,7 +15,7 @@
     </v-card-title>
 
     <v-card-subtitle class="mb-8 mt-n5">
-      <span class="font-weight-semibold text--primary me-3">Using our digital assets investment platform, you can copy biggest collectors trade and invest seamlessly in Non-Fungible tokens (NFTs)</span>
+      <span class="font-weight-semibold text--primary me-3©">Using our digital assets investment platform, you can copy biggest collectors trading strategies and invest seamlessly in Non-Fungible tokens (NFTs)</span>
     </v-card-subtitle>
 
     <v-card-text>
