@@ -1,88 +1,48 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span>Total Earning</span>
+      <span>Activity</span>
       <v-spacer></v-spacer>
 
-      <v-btn
-        icon
-        small
-        class="me-n3 mt-n2"
-      >
+      <v-btn icon small class="me-n3 mt-n2">
         <v-icon>
           {{ icons.mdiDotsVertical }}
         </v-icon>
       </v-btn>
+
     </v-card-title>
-
-    <v-card-text class="my-7">
-      <div class="d-flex align-center">
-        <h1 class="text-4xl font-weight-semibold">
-          $24,895
-        </h1>
-
-        <div class="d-flex align-center mb-n3">
-          <v-icon
-            size="40"
-            color="success"
-          >
-            {{ icons.mdiMenuUp }}
-          </v-icon>
-          <span class="text-base font-weight-medium success--text ms-n2">10%</span>
-        </div>
-      </div>
-
-      <h4 class="mt-2 font-weight-medium">
-        Compared to $84,325 last year
-      </h4>
-    </v-card-text>
-
     <v-card-text>
-      <div
-        v-for="(earning,index) in totalEarning"
-        :key="earning.avatar"
-        :class="`d-flex align-start ${index >0 ? 'mt-8':''}`"
-      >
-        <v-avatar
-          rounded
-          size="38"
-          color="#5e56690a"
-          class="me-4"
-        >
-          <v-img
-            contain
-            :src="earning.avatar"
-            height="20"
-          ></v-img>
-        </v-avatar>
-
-        <div class="d-flex align-center flex-grow-1 flex-wrap">
-          <div>
-            <h4 class="font-weight-medium">
-              {{ earning.title }}
-            </h4>
-            <span class="text-xs text-no-wrap">{{ earning.subtitle }}</span>
+      <v-list>
+        <v-divider Inset></v-divider>
+        <v-list-item v-for="(data, index) in eventsLive" :key="data.id"
+          :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`">
+          <!-- <div class="d-flex align-center flex-grow-1 flex-wrap">
+            <div class="me-auto pe-2">
+              aaaaaaaaaaaa
+              <h4 class="font-weight-semibold name-space" v-if="data.creator.alias">
+                {{ data.creator.alias }}
+              </h4>
+              <h4 class="font-weight-semibold name-space" v-else>
+                {{ data.creator.address }}
+              </h4>
+            </div>
           </div>
 
-          <v-spacer></v-spacer>
-
-          <div class="ms-1">
-            <p class="text--primary font-weight-medium mb-1">
-              {{ earning.earning }}
-            </p>
-            <v-progress-linear
-              :value="earning.progress"
-              :color="earning.color"
-            ></v-progress-linear>
-          </div>
-        </div>
-      </div>
+          <v-img contain max-height="30" max-width="30"
+            :src="`https://ipfs.io/${data.token.thumbnail_uri.replace(':/', '')}`" class="me-3 rounded-circle">
+          </v-img> -->
+          aaaaa
+        </v-list-item>
+      </v-list>
     </v-card-text>
+
+
   </v-card>
 </template>
 
 <script>
 import { mdiDotsVertical, mdiMenuUp } from '@mdi/js'
+import { API } from '/src/utils/API.js'
 
 export default {
   setup() {
@@ -116,7 +76,23 @@ export default {
     return {
       totalEarning,
       icons: { mdiDotsVertical, mdiMenuUp },
+      followers: {},
+      eventsLive: []
     }
   },
+  mounted() {
+    if (localStorage.singleSelect) {
+      this.followers = Object.entries(JSON.parse(localStorage.singleSelect)).filter(([key, value]) => value).map(([key, val]) => key)
+    }
+
+
+    API.users.getEventsLive(this.followers[1]).then(res => {
+      console.log(res.data.event);
+      this.eventsLive = res.data.event
+      console.log(this.eventsLive)
+    })
+
+
+  }
 }
 </script>

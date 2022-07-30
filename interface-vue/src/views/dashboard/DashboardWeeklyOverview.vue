@@ -1,45 +1,20 @@
 <template>
   <v-card>
     <v-card-title class="align-start">
-      <span>Weekly Overview</span>
+      <span>Following</span>
 
       <v-spacer></v-spacer>
-
-      <v-btn
+       <v-btn
         icon
         small
-        class="mt-n2 me-n3"
+        class="me-n3 mt-n2"
       >
-        <v-icon size="22">
+        <v-icon>
           {{ icons.mdiDotsVertical }}
         </v-icon>
       </v-btn>
-    </v-card-title>
+      </v-card-title>
 
-    <v-card-text>
-      <!-- Chart -->
-      <vue-apex-charts
-        :options="chartOptions"
-        :series="chartData"
-        height="210"
-      ></vue-apex-charts>
-
-      <div class="d-flex align-center">
-        <h3 class="text-2xl font-weight-semibold me-4">
-          45%
-        </h3>
-        <span>Your sales perfomance in 45% 🤩 better compare to last month</span>
-      </div>
-
-      <v-btn
-        block
-        color="primary"
-        class="mt-6"
-        outlined
-      >
-        Details
-      </v-btn>
-    </v-card-text>
   </v-card>
 </template>
 

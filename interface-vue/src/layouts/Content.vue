@@ -34,7 +34,7 @@
               {{ icons.mdiBellOutline }}
             </v-icon>
           </v-btn>
-          <v-btn color="primary" class="ms-3" dark @click="connectWallet"> Connect Wallet </v-btn>
+          <v-btn color="primary" class="ms-3" dark @click="connectWallet"> {{user?user:'Connect Wallet'}} </v-btn>
         </div>
       </div>
     </v-app-bar>

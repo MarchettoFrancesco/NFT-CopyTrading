@@ -16,14 +16,14 @@
     <v-col
       cols="12"
       sm="6"
-      md="4"
+      md="3"
     >
       <dashboard-weekly-overview></dashboard-weekly-overview>
     </v-col>
 
     <v-col
       cols="12"
-      md="4"
+      md="9"
       sm="6"
     >
       <dashboard-card-total-earning></dashboard-card-total-earning>
