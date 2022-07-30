@@ -88,8 +88,8 @@ const users = {
           where: 
             {timestamp: {_is_null: false}, 
             recipient_address: {_eq: "${user}"}, 
-            event_type: {_eq: "${type}"}}, 
-          limit: ${limit}, 
+            event_type: {_eq: "${type ?? 'ask_purchase'}"}}, 
+          limit: ${limit ?? 100}, 
           offset: 0, 
           order_by: {id: desc, timestamp: desc}) 
           {
