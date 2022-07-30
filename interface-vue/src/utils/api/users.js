@@ -82,14 +82,13 @@ const users = {
     }),
   getEventsLive: (user, type, limit) =>
     new Promise((resolve, reject) => {
-      console.log(user, type, limit)
       const query = `query compra {
         event(
           where: 
             {timestamp: {_is_null: false}, 
             recipient_address: {_eq: "${user}"}, 
             event_type: {_eq: "${type ?? 'ask_purchase'}"}}, 
-          limit: ${limit ?? 100}, 
+          limit: ${limit ?? 10}, 
           offset: 0, 
           order_by: {id: desc, timestamp: desc}) 
           {

@@ -147,7 +147,6 @@ export default defineComponent({
         .getTopSellers()
         .then(sellers => sellers.map(seller => this.mapUser(seller)))
         .then(res => (this.topSellers = res))
-    API.users.getEventsLive('tz1XTEx1VGj6pm7Wh2Ni2hKQCWYSBxjnEsE1', 'ask_purchase').then(res => console.log(res))
   },
 })
 </script>
