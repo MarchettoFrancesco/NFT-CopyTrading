@@ -80,6 +80,28 @@ const users = {
       //     "__typename": "sales_stat"
       //   }
     }),
+  getUserById: id =>
+    new Promise((resolve, reject) => {
+      const query = `query getUserById {
+      holder_by_pk(address: "${id}") {
+        address
+        alias
+        description
+        email
+        github
+        instagram
+        logo
+        facebook
+      }
+    }`
+      fetch('https://api2.objkt.com/v1/graphql', {
+        ...options,
+        body: JSON.stringify({ query }),
+      })
+        .then(res => res.json())
+        .then(res => resolve(res.data.holder_by_pk))
+        .catch(err => reject(err))
+    }),
   getEventsLive: (user, type, limit) =>
     new Promise((resolve, reject) => {
       const query = `query compra {

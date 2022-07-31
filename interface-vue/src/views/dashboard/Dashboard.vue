@@ -1,43 +1,23 @@
 <template>
   <v-row>
-    <v-col
-      cols="12"
-      md="4"
-    >
+    <v-col cols="12" md="4">
       <dashboard-congratulation-john></dashboard-congratulation-john>
     </v-col>
-    <v-col
-      cols="12"
-      md="8"
-    >
+    <v-col cols="12" md="8">
       <dashboard-statistics-card></dashboard-statistics-card>
     </v-col>
 
-    <v-col
-      cols="12"
-      sm="6"
-      md="3"
-    >
-      <dashboard-weekly-overview></dashboard-weekly-overview>
+    <v-col cols="12" sm="6" md="3">
+      <dashboard-weekly-overview :following="following" @click="getDataUser"></dashboard-weekly-overview>
     </v-col>
 
-    <v-col
-      cols="12"
-      md="9"
-      sm="6"
-    >
-      <dashboard-card-total-earning></dashboard-card-total-earning>
+    <v-col cols="12" md="9" sm="6">
+      <dashboard-card-total-earning :activity="eventsLive"></dashboard-card-total-earning>
     </v-col>
 
-    <v-col
-      cols="12"
-      md="4"
-    >
+    <v-col cols="12" md="4">
       <v-row class="match-height">
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="totalProfit.change"
             :color="totalProfit.color"
@@ -47,10 +27,7 @@
             :subtitle="totalProfit.subtitle"
           ></statistics-card-vertical>
         </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="totalSales.change"
             :color="totalSales.color"
@@ -60,10 +37,7 @@
             :subtitle="totalSales.subtitle"
           ></statistics-card-vertical>
         </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="newProject.change"
             :color="newProject.color"
@@ -74,10 +48,7 @@
           ></statistics-card-vertical>
         </v-col>
 
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="salesQueries.change"
             :color="salesQueries.color"
@@ -90,16 +61,10 @@
       </v-row>
     </v-col>
 
-    <v-col
-      cols="12"
-      md="4"
-    >
+    <v-col cols="12" md="4">
       <dashboard-card-sales-by-countries></dashboard-card-sales-by-countries>
     </v-col>
-    <v-col
-      cols="12"
-      md="8"
-    >
+    <v-col cols="12" md="8">
       <dashboard-card-deposit-and-withdraw></dashboard-card-deposit-and-withdraw>
     </v-col>
     <v-col cols="12">
@@ -112,6 +77,7 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiPoll, mdiLabelVariantOutline, mdiCurrencyUsd, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
+import { API } from '/src/utils/API.js'
 
 // demos
 import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
@@ -177,6 +143,43 @@ export default {
       newProject,
       salesQueries,
     }
+  },
+  data() {
+    return {
+      following: [],
+      eventsLive: [],
+    }
+  },
+  mounted() {
+    if (localStorage.singleSelect) {
+      Object.entries(JSON.parse(localStorage.singleSelect))
+        .filter(([key, value]) => value) // detele follow false
+        .forEach(async ([key, val]) => {
+          const userData = await API.users.getUserById(key)
+          if (!userData) return
+          userData.img = userData.logo ?? `https://services.tzkt.io/v1/avatars2/${userData.address}`
+          userData.name = userData.alias ?? userData.address
+          // console.log(userData)
+          this.following = [...this.following, userData]
+        }) // left only address
+    }
+  },
+  methods: {
+    getDataUser(userId) {
+
+      API.users.getEventsLive(userId).then(res => {
+        const mapData = [...res.data.event].map(ele => {
+          return {
+            from: ele.creator.alias ?? ele.creator.address,
+            to: ele.recipient.alias ?? userId,
+            price: ele.price,
+            preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+            event_type: 'buy',
+          }
+        })
+        this.eventsLive = mapData
+      })
+    },
   },
 }
 </script>

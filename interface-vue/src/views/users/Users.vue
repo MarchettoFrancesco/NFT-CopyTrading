@@ -6,7 +6,7 @@
       <v-card-title>
 <v-row no-glutters>
       <v-col cols="2" class="text-center"> Follow </v-col>
-      <v-col cols="4"> Top Sellers</span> </v-col>
+      <v-col cols="4"> Top Sellers </v-col>
       <v-col cols="6" class="text-right">Amount sold in XTZ:</v-col>
 </v-row>
 </v-card-title>
@@ -59,7 +59,7 @@
         <v-card-title>
           <v-row no-glutters>
             <v-col cols="2" class="text-center"> Follow </v-col>
-            <v-col cols="4"> Top Buyers</span> </v-col>
+            <v-col cols="4"> Top Buyers </v-col>
             <v-col cols="6" class="text-right">Amount bought in XTZ:</v-col>
           </v-row>
           </v-card-title>
@@ -106,13 +106,11 @@
 <script>
 import { defineComponent } from '@vue/composition-api'
 import { API } from '/src/utils/API.js'
-
+import { mapGetters,mapActions } from 'vuex'
 export default defineComponent({
   data() {
     return {
       singleSelect: {},
-      topBuyers: [],
-      topSellers: [],
     }
   },
   mounted() {
@@ -126,6 +124,7 @@ export default defineComponent({
     },
   },
   methods: {
+    ...mapActions('data', ['getTopBuyers','getTopSellers']),
     mapUser(user) {
       if (!user?.subject?.logo) user.subject.logo = `https://services.tzkt.io/v1/avatars2/${user?.subject?.address}`
       if (!user?.subject?.alias) user.subject.alias = user?.subject?.address
@@ -136,25 +135,12 @@ export default defineComponent({
       this.singleSelect = { ...this.singleSelect }
     },
   },
+  computed:{
+    ...mapGetters('data', ['topBuyers','topSellers'])
+  },
   created() {
-    API.users
-      .getTopBuyers()
-      .then(buyers => buyers.map(buyer => this.mapUser(buyer)))
-      .then(res => {
-        this.topBuyers = res
-      }),
-      API.users
-        .getTopSellers()
-        .then(sellers => sellers.map(seller => this.mapUser(seller)))
-        .then(res => (this.topSellers = res))
+      this.getTopBuyers()
+      this.getTopSellers()
   },
 })
 </script>
-<style scoped>
-.name-space {
-  width: 100px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-</style>

@@ -4,112 +4,45 @@
       <span>Following</span>
 
       <v-spacer></v-spacer>
-       <v-btn
-        icon
-        small
-        class="me-n3 mt-n2"
-      >
+      <v-btn icon small class="me-n3 mt-n2">
         <v-icon>
           {{ icons.mdiDotsVertical }}
         </v-icon>
       </v-btn>
-      </v-card-title>
-
+    </v-card-title>
+    <v-card-text>
+      <v-list>
+        <v-divider Inset></v-divider>
+        <v-list-item
+          v-for="(data, index) in following"
+          :key="data.address"
+          @click="$emit('click', data.address)"
+          :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`"
+          ><v-list-item-icon
+            ><v-img contain max-height="30" max-width="30" :src="data.img" class="me-3 rounded-circle"> </v-img
+          ></v-list-item-icon>
+          <v-list-item-content>
+            <span class="name-space">{{ data.name }}</span>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-card-text>
   </v-card>
 </template>
 
 <script>
-import VueApexCharts from 'vue-apexcharts'
 // eslint-disable-next-line object-curly-newline
 import { mdiDotsVertical, mdiTrendingUp, mdiCurrencyUsd } from '@mdi/js'
-import { getCurrentInstance } from '@vue/composition-api'
 
 export default {
-  components: {
-    VueApexCharts,
+  props: {
+    following: {
+      type: Array,
+      default: () => [],
+    },
   },
   setup() {
-    const ins = getCurrentInstance()?.proxy
-    const $vuetify = ins && ins.$vuetify ? ins.$vuetify : null
-    const customChartColor = $vuetify.theme.isDark ? '#3b3559' : '#f5f5f5'
-
-    const chartOptions = {
-      colors: [
-        customChartColor,
-        customChartColor,
-        customChartColor,
-        customChartColor,
-        $vuetify.theme.currentTheme.primary,
-        customChartColor,
-        customChartColor,
-      ],
-      chart: {
-        type: 'bar',
-        toolbar: {
-          show: false,
-        },
-        offsetX: -15,
-      },
-      plotOptions: {
-        bar: {
-          columnWidth: '40%',
-          distributed: true,
-          borderRadius: 8,
-          startingShape: 'rounded',
-          endingShape: 'rounded',
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        show: false,
-      },
-      xaxis: {
-        categories: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        tickPlacement: 'on',
-        labels: {
-          show: false,
-          style: {
-            fontSize: '12px',
-          },
-        },
-      },
-      yaxis: {
-        show: true,
-        tickAmount: 4,
-        labels: {
-          offsetY: 3,
-          formatter: value => `$${value}`,
-        },
-      },
-      stroke: {
-        width: [2, 2],
-      },
-      grid: {
-        strokeDashArray: 12,
-        padding: {
-          right: 0,
-        },
-      },
-    }
-
-    const chartData = [
-      {
-        data: [40, 60, 50, 60, 75, 60, 50, 65],
-      },
-    ]
-
     return {
-      chartOptions,
-      chartData,
-
       icons: {
         mdiDotsVertical,
         mdiTrendingUp,
