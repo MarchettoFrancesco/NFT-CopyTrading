@@ -100,8 +100,7 @@
       </div>
     </div>
   </v-card>
-  </v-row>
-  </v-container>
+</v-container>
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'

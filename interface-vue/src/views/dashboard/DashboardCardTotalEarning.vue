@@ -6,7 +6,7 @@
     </v-card-title>
     <v-card-text>
       <v-data-table :headers="headers" :items="activity" item-key="creator" class="elevation-1">
-        <template #[`item.transfer_type`]="{item}">
+          <template #[`item.transfer_type`]="{item}">
           <td>{{ item.transfer_type }}</td>
         </template>
         <template #[`item.from`]="{item}">
@@ -15,9 +15,12 @@
         <template #[`item.to`]="{item}">
           <td><span class="name-space">{{ item.to }}</span></td>
         </template>
+        <template #[`item.preview`]="{item}">
+              <div class="img-circle img-circle--size" v-bind:style="{backgroundImage: `url('https://ipfs.io/${data.token.thumbnail_uri.replace(':/', '')}')` , backgroundSize: 'cover', backgroundPosition: 'center' }"></div>
+          </template>
         <template #[`item.price`]="{item}">
         {{ item.price | tezos }}
-      </template>
+          </template>
       </v-data-table>
 
       <!-- <v-list>
@@ -52,6 +55,7 @@
 
 <script>
 import { mdiDotsVertical, mdiMenuUp } from '@mdi/js'
+import sergio from './datatable-data'
 
 export default {
   data() {
