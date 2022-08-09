@@ -4,5 +4,6 @@ export default function() {
     topBuyers: [],
     lastUpdateSellers: null,
     lastUpdateBuyers: null,
+    users: [],
   }
 }

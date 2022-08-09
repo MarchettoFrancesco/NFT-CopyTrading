@@ -6,3 +6,6 @@ export function setBuyers(state, value) {
   state.lastUpdateBuyers = new Date()
   state.topBuyers = value
 }
+export function setUsers(state, value) {
+  state.users = value
+}

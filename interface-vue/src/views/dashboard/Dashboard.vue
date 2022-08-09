@@ -78,6 +78,7 @@
 import { mdiPoll, mdiLabelVariantOutline, mdiCurrencyUsd, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
 import { API } from '/src/utils/API.js'
+import { mapActions, mapGetters } from 'vuex'
 
 // demos
 import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
@@ -146,40 +147,31 @@ export default {
   },
   data() {
     return {
-      following: [],
-      eventsLive: [],
+      selected: null,
     }
   },
   mounted() {
     if (localStorage.singleSelect) {
       Object.entries(JSON.parse(localStorage.singleSelect))
         .filter(([key, value]) => value) // detele follow false
-        .forEach(async ([key, val]) => {
-          const userData = await API.users.getUserById(key)
-          if (!userData) return
-          userData.img = userData.logo ?? `https://services.tzkt.io/v1/avatars2/${userData.address}`
-          userData.name = userData.alias ?? userData.address
-          // console.log(userData)
-          this.following = [...this.following, userData]
+        .forEach(async ([address, val]) => {
+          this.getUserData({ address, following: val })
         }) // left only address
     }
   },
   methods: {
+    ...mapActions('data', ['getUserData', 'getUserTransactions']),
     getDataUser(userId) {
-
-      API.users.getEventsLive(userId).then(res => {
-        const mapData = [...res.data.event].map(ele => {
-          return {
-            from: ele.creator.alias ?? ele.creator.address,
-            to: ele.recipient.alias ?? userId,
-            price: ele.price,
-            preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
-            event_type: 'buy',
-          }
-        })
-        this.eventsLive = mapData
-      })
+      this.getUserTransactions(userId)
+      this.selected = userId
+      
     },
+  },
+  computed: {
+    ...mapGetters('data', ['following']),
+    eventsLive(){
+      return this.following.find(user => user.address === this.selected)?.transactions??[]
+    }
   },
 }
 </script>

@@ -102,6 +102,33 @@ const users = {
         .then(res => resolve(res.data.holder_by_pk))
         .catch(err => reject(err))
     }),
+  searchUser: name =>
+    new Promise((resolve, reject) => {
+      const query = `query searchUser {
+        holder( limit: 10,
+                where: {_or: [{address: {_regex: "$${name}"}}, 
+                              {alias: {_regex: "${name}"}},
+                              {tzdomain:{_regex: "${name}"}}
+                            ]},
+                order_by: {sales_stats_aggregate: {count: asc}, 
+                          alias: asc_nulls_last, 
+                          tzdomain: asc_nulls_last, 
+                          inserted_at: asc_nulls_last}
+              ) {
+          address
+          alias
+          logo
+          tzdomain
+        }
+      }`
+      fetch('https://api2.objkt.com/v1/graphql', {
+        ...options,
+        body: JSON.stringify({ query }),
+      })
+        .then(res => res.json())
+        .then(res => resolve(res.data.holder))
+        .catch(err => reject(err))
+    }),
   getEventsLive: (user, type, limit) =>
     new Promise((resolve, reject) => {
       const query = `query compra {
@@ -141,7 +168,7 @@ const users = {
         body: JSON.stringify({ query }),
       })
         .then(res => res.json())
-        .then(res => resolve(res))
+        .then(res => resolve(res.data.event))
         .catch(err => reject(err))
 
       // data: {event: [,…]}
