@@ -89,6 +89,7 @@ import DashboardCardSalesByCountries from './DashboardCardSalesByCountries.vue'
 import DashboardWeeklyOverview from './DashboardWeeklyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
 
+
 export default {
   components: {
     StatisticsCardVertical,

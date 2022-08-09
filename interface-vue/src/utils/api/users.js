@@ -132,24 +132,16 @@ const users = {
   getEventsLive: (user, type, limit) =>
     new Promise((resolve, reject) => {
       const query = `query compra {
-        event(
-          where: 
-            {timestamp: {_is_null: false}, 
-            recipient_address: {_eq: "${user}"}, 
-            event_type: {_eq: "${type ?? 'ask_purchase'}"}}, 
-          limit: ${limit ?? 10}, 
-          offset: 0, 
-          order_by: {id: desc, timestamp: desc}) 
-          {
+        event(limit: 20, order_by: {timestamp: desc, id: desc}, where: {timestamp: {_is_null: false}, _or: [{creator_address: {_eq: "${user}"}}, {recipient_address: {_eq: "${user}"}}], event_type: {_eq: "ask_purchase"}}, offset: 0) {
           id
-          amount
           price
+          amount
+          event_type
           creator {
             address
             alias
             logo
           }
-          event_type
           recipient {
             address
             alias
@@ -162,7 +154,7 @@ const users = {
           }
         }
       }`
-
+      
       fetch('https://api2.objkt.com/v1/graphql', {
         ...options,
         body: JSON.stringify({ query }),

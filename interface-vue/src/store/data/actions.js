@@ -79,15 +79,24 @@ export async function getUserTransactions({ commit, state }, address) {
   if (!lastUpdate || lastUpdate - now < lastUpdate - nexUpdate) {
     const transactions = await API.users.getEventsLive(address).then(res =>
       res.map(ele => {
-        return {
-          from: ele.creator.alias ?? ele.creator.address,
-          to: ele.recipient.alias ?? address,
-          price: ele.price,
-          preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
-          event_type: 'buy',
-        }
-      }),
-    )
+        if(address == ele.creator.address){
+          return {
+              from: ele.creator.alias ?? ele.creator.address,
+              to: ele.recipient.alias ?? address,
+              price: ele.price,
+              preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+              event_type: 'sold',
+            }
+          } else {
+            return {
+              from: ele.creator.alias ?? ele.creator.address,
+              to: ele.recipient.alias ?? address,
+              price: ele.price,
+              preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+              event_type: 'bought',
+            }
+          }
+         }))
     let users = JSON.parse(JSON.stringify(state.users))
     users[i] = { ...users[i], transactions, lastUpdate: now }
     commit('setUsers', users)

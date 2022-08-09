@@ -21,40 +21,12 @@
           {{ item.price | tezos }}
         </template>
       </v-data-table>
-
-      <!-- <v-list>
-        <v-divider Inset></v-divider>
-        <v-list-item v-for="(data, index) in activity" :key="index" :class="`d-flex px-0 ${index > 0 ? 'mt-4' : ''}`">
-          <v-img
-            contain
-            max-height="30"
-            max-width="30"
-            :src="`https://ipfs.io/${data.token.thumbnail_uri.replace(':/', '')}`"
-            class="me-3 rounded-circle"
-          >
-          </v-img>
-          <div class="d-flex align-center flex-grow-1 flex-wrap">
-            <div class="me-auto pe-2">
-              <h4 class="font-weight-semibold name-space" v-if="data.creator.alias">
-                {{ data.creator.alias }}
-              </h4>
-              <h4 class="font-weight-semibold name-space" v-else>
-                {{ data.creator.address }}
-              </h4>
-            </div>
-          </div>
-          <div class="me-auto pe-2">
-            {{ data.price | tezos }}
-          </div>
-        </v-list-item>
-      </v-list> -->
     </v-card-text>
   </v-card>
 </template>
 
 <script>
 import { mdiDotsVertical, mdiMenuUp } from '@mdi/js'
-import sergio from './datatable-data'
 
 export default {
   data() {
