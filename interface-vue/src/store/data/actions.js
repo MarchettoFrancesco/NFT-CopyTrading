@@ -6,6 +6,7 @@ function mapUser(user) {
   return user
 }
 export function getTopBuyers({ commit, state }) {
+  // getUserData({ commit, state }, { address: 'tz1Wzwn5KCCnf12wCX9LAPrd9uYR8iPDNSx3' })
   const now = new Date()
   if (!state.lastUpdateBuyers) {
     API.users
@@ -50,5 +51,47 @@ export function getTopSellers({ commit, state }) {
       })
     return
   }
+}
+export async function getUserData({ commit, state }, { address, following }) {
+  const i = state.users.findIndex(user => user.address === address)
+  if (i === -1) {
+    // user not found
+    const user = await API.users.getUserById(address)
+    if (!user) return
+    user.img = user.logo ?? `https://services.tzkt.io/v1/avatars2/${user.address}`
+    user.name = user.alias ?? user.address
+    user.following = following ?? false
+    let users = JSON.parse(JSON.stringify(state.users))
+    users.push(user)
+    commit('setUsers', users)
+  }
+  return
+}
+export async function getUserTransactions({ commit, state }, address) {
+  const i = state.users.findIndex(user => user.address === address)
+  // user not  found
+  if (i === -1) return
 
+  let lastUpdate = state.users[i].lastUpdate
+  const now = new Date()
+  const nexUpdate = new Date(lastUpdate)
+  nexUpdate.setMinutes(nexUpdate.getMinutes() + 1)
+  if (!lastUpdate || lastUpdate - now < lastUpdate - nexUpdate) {
+    const transactions = await API.users.getEventsLive(address).then(res =>
+      res.map(ele => {
+        return {
+          from: ele.creator.alias ?? ele.creator.address,
+          to: ele.recipient.alias ?? address,
+          price: ele.price,
+          preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+          event_type: 'buy',
+        }
+      }),
+    )
+    let users = JSON.parse(JSON.stringify(state.users))
+    users[i] = { ...users[i], transactions, lastUpdate: now }
+    commit('setUsers', users)
+  }
+
+  return
 }
