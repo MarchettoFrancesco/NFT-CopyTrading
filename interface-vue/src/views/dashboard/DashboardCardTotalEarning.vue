@@ -13,13 +13,10 @@
           <span class="name-space" style="display:inline-block">{{ value }}</span>
         </template>
         <template #[`item.preview`]="{item}">
-          <v-avatar color="primary">
-          <img :src="item.preview">
-          </img></v-avatar>
+          <v-avatar color="primary" size="36">
+          <img :src="item.preview"/>
+          </v-avatar>
         </template>
-        <template #[`item.preview`]="{item}">
-              <div class="img-circle img-circle--size" v-bind:style="{backgroundImage: `url('https://ipfs.io/${data.token.thumbnail_uri.replace(':/', '')}')` , backgroundSize: 'cover', backgroundPosition: 'center' }"></div>
-          </template>
         <template #[`item.price`]="{item}">
           {{ item.price | tezos }}
         </template>
