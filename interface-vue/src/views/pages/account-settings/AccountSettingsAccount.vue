@@ -1,42 +1,28 @@
 <template>
-  <v-card
-    flat
-    class="pa-3 mt-2"
-  >
+  <v-card flat class="pa-3 mt-2">
     <v-card-text class="d-flex">
-      <v-avatar
-        rounded
-        size="120"
-        class="me-6"
-      >
-        <v-img :src="accountDataLocale.avatarImg"></v-img>
+      <v-avatar rounded size="120" class="me-6" @click="$refs.refInputEl.click()" style="cursor:pointer">
+        <v-img :src="nftImage"
+          ><template v-slot:placeholder>
+            <v-row class="fill-height ma-0 primary" align="center" justify="center">
+              <v-icon size="44">{{ icons.mdiCamera }}</v-icon>
+            </v-row>
+          </template></v-img
+        >
       </v-avatar>
 
       <!-- upload photo -->
       <div>
-        <v-btn
-          color="primary"
-          class="me-3 mt-5"
-          @click="$refs.refInputEl.click()"
-        >
+        <v-btn color="primary" class="me-3 mt-5" @click="$refs.refInputEl.click()">
           <v-icon class="d-sm-none">
             {{ icons.mdiCloudUploadOutline }}
           </v-icon>
           <span class="d-none d-sm-block">Upload new photo</span>
         </v-btn>
 
-        <input
-          ref="refInputEl"
-          type="file"
-          accept=".jpeg,.png,.jpg,GIF"
-          :hidden="true"
-        />
+        <input ref="refInputEl" type="file" accept=".jpeg,.png,.jpg,GIF" :hidden="true" @change="previewFiles" />
 
-        <v-btn
-          color="error"
-          outlined
-          class="mt-5"
-        >
+        <v-btn color="error" outlined class="mt-5">
           Reset
         </v-btn>
         <p class="text-sm mt-5">
@@ -46,122 +32,27 @@
     </v-card-text>
 
     <v-card-text>
-      <v-form class="multi-col-validation mt-6">
+      <v-form class="multi-col-validation mt-6" @submit.prevent="mint">
         <v-row>
-          <v-col
-            md="6"
-            cols="12"
-          >
-            <v-text-field
-              v-model="accountDataLocale.username"
-              label="Username"
-              dense
-              outlined
-            ></v-text-field>
+          <v-col md="6" cols="12">
+            <v-text-field v-model="name" label="Name" dense outlined></v-text-field>
           </v-col>
-
-          <v-col
-            md="6"
-            cols="12"
-          >
-            <v-text-field
-              v-model="accountDataLocale.name"
-              label="Name"
-              dense
-              outlined
-            ></v-text-field>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="amount" label="Amout" type="number" step="1" dense outlined></v-text-field>
           </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="accountDataLocale.email"
-              label="E-mail"
-              dense
-              outlined
-            ></v-text-field>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="accountDataLocale.role"
-              dense
-              label="Role"
-              outlined
-            ></v-text-field>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-select
-              v-model="accountDataLocale.status"
-              dense
-              outlined
-              label="Status"
-              :items="status"
-            ></v-select>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="accountDataLocale.company"
-              dense
-              outlined
-              label="Company"
-            ></v-text-field>
-          </v-col>
-
-          <!-- alert -->
           <v-col cols="12">
-            <v-alert
-              color="warning"
-              text
-              class="mb-0"
-            >
-              <div class="d-flex align-start">
-                <v-icon color="warning">
-                  {{ icons.mdiAlertOutline }}
-                </v-icon>
+            <v-textarea v-model="description" label="Description" dense outlined></v-textarea>
+          </v-col>
 
-                <div class="ms-3">
-                  <p class="text-base font-weight-medium mb-1">
-                    Your email is not confirmed. Please check your inbox.
-                  </p>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-decoration-none warning--text"
-                  >
-                    <span class="text-sm">Resend Confirmation</span>
-                  </a>
-                </div>
-              </div>
-            </v-alert>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="symbol" dense label="Symbol" outlined></v-text-field>
           </v-col>
 
           <v-col cols="12">
-            <v-btn
-              color="primary"
-              class="me-3 mt-4"
-            >
-              Save changes
+            <v-btn color="primary" class="me-3 mt-4" @click="mint">
+              Mint
             </v-btn>
-            <v-btn
-              color="secondary"
-              outlined
-              class="mt-4"
-              type="reset"
-              @click.prevent="resetForm"
-            >
+            <v-btn color="secondary" outlined class="mt-4" type="reset" @click.prevent="resetForm">
               Cancel
             </v-btn>
           </v-col>
@@ -172,15 +63,45 @@
 </template>
 
 <script>
-import { mdiAlertOutline, mdiCloudUploadOutline } from '@mdi/js'
+import { mdiAlertOutline, mdiCloudUploadOutline, mdiCamera } from '@mdi/js'
 import { ref } from '@vue/composition-api'
+import { NFTStorage, File } from 'nft.storage'
 
+const NFT_STORAGE_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJlODQ1QmE3OTZEMmU5YTRGNzY5YjFhMjEwNjZDQzQwNGIzN2Q1N0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MDEyNDMwMDEzMiwibmFtZSI6ImFwaGVsaW9zIn0.546qPlU6ENvYHwcollzJlA-_kfIuZxT8OAm7QfgyWxs'
+
+const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY })
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJlODQ1QmE3OTZEMmU5YTRGNzY5YjFhMjEwNjZDQzQwNGIzN2Q1N0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MDEyNDMwMDEzMiwibmFtZSI6ImFwaGVsaW9zIn0.546qPlU6ENvYHwcollzJlA-_kfIuZxT8OAm7QfgyWxs
+// aphelios
 export default {
   props: {
     accountData: {
       type: Object,
       default: () => {},
     },
+  },
+  methods: {
+    previewFiles(event) {
+      console.log(event.target.files[0])
+      const nftImage = URL.createObjectURL(event.target.files[0])
+      this.filesContent = event.target.files[0]
+      this.nftImage = nftImage
+    },
+    async mint() {
+      const metadata = await nftstorage.store({
+        name: this.name,
+        description: this.description,
+        decimals: 0,
+        symbol: this.symbol,
+        image: new File([this.filesContent[0].content], this.filesContent[0].name, {
+          type: 'image/' + this.filesContent[0].name.split('.')[1],
+        }),
+      })
+    },
+  },
+  data() {
+    return { nftImage: '', name: '', description: '', amount: 1, symbol: '', filesContent: null }
   },
   setup(props) {
     const status = ['Active', 'Inactive', 'Pending', 'Closed']
@@ -198,6 +119,7 @@ export default {
       icons: {
         mdiAlertOutline,
         mdiCloudUploadOutline,
+        mdiCamera,
       },
     }
   },

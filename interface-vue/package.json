@@ -4,7 +4,7 @@
   "license": "MIT",
   "version": "1.0.3",
   "author": {
-    "name": "ThemeSelection",
+    "name": "Aphelios",
     "url": "https://themeselection.com/"
   },
   "bugs": {
@@ -30,13 +30,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@mdi/js": "^5.9.55",
     "@taquito/beacon-wallet": "^12.1.1",
     "@taquito/taquito": "^12.1.1",
-    "@mdi/js": "^5.9.55",
     "@vue/composition-api": "^1.3.3",
     "@vuetify/cli-plugin-utils": "^0.0.9",
     "apexcharts": "^3.27.3",
     "core-js": "^3.6.5",
+    "ipfs-car": "^0.8.1",
+    "nft.storage": "^7.0.0",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.2",
     "vue-router": "^3.2.0",
@@ -59,5 +61,5 @@
     "vue-cli-plugin-vuetify": "~2.4.2",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.7.0"
-  } 
+  }
 }

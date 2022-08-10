@@ -15,7 +15,7 @@
       <dashboard-card-total-earning :activity="eventsLive"></dashboard-card-total-earning>
     </v-col>
 
-    <v-col cols="12" md="4">
+    <!-- <v-col cols="12" md="4">
       <v-row class="match-height">
         <v-col cols="12" sm="6">
           <statistics-card-vertical
@@ -69,7 +69,7 @@
     </v-col>
     <v-col cols="12">
       <dashboard-datatable></dashboard-datatable>
-    </v-col>
+    </v-col> -->
   </v-row>
 </template>
 
