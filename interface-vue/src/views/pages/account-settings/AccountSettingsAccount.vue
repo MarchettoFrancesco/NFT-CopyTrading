@@ -136,9 +136,11 @@
 </template>
 
 <script>
+import { mintNFT, address } from '../../../utils/index'
 import { mdiAlertOutline, mdiCloudUploadOutline, mdiCamera } from '@mdi/js'
 import { ref } from '@vue/composition-api'
 import { NFTStorage, File } from 'nft.storage/dist/bundle.esm.min.js'
+
 
 const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJlODQ1QmE3OTZEMmU5YTRGNzY5YjFhMjEwNjZDQzQwNGIzN2Q1N0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MDEyNDMwMDEzMiwibmFtZSI6ImFwaGVsaW9zIn0.546qPlU6ENvYHwcollzJlA-_kfIuZxT8OAm7QfgyWxs'
 
@@ -179,8 +181,11 @@ export default {
         decimals: 0,
         symbol: this.symbol,
         image: this.filesContent,
+        creators: [this.user],
       })
       console.log(metadata)
+      const nko = mintNFT(0,1,metadata)
+      console.log(nko)
     },
   },
   setup(props) {

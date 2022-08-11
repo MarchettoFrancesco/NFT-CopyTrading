@@ -85,6 +85,7 @@ export async function getUserTransactions({ commit, state }, address) {
               to: ele.recipient.alias ?? address,
               price: ele.price,
               preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+              name: ele.fa.name,
               event_type: 'sold',
             }
           } else {
@@ -93,6 +94,7 @@ export async function getUserTransactions({ commit, state }, address) {
               to: ele.recipient.alias ?? address,
               price: ele.price,
               preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+              name: ele.fa.name,
               event_type: 'bought',
             }
           }

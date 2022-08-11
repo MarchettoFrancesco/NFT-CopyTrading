@@ -17,6 +17,9 @@
           <img :src="item.preview"/>
           </v-avatar>
         </template>
+        <template #[`item.name`]="{value}">
+          <span class="name-space" style="display:inline-block">{{ value }}</span>
+        </template>
         <template #[`item.price`]="{item}">
           {{ item.price | tezos }}
         </template>
@@ -36,6 +39,7 @@ export default {
         { text: 'From', value: 'from', class: 'name-space' },
         { text: 'To', value: 'to', class: 'name-space' },
         { text: 'Preview', value: 'preview' },
+        { text: 'Collection', value: 'name' },
         { text: 'Price', value: 'price', width: '200px', align: 'center' },
         { text: 'Action', value: 'action', width: '100px' },
       ],
