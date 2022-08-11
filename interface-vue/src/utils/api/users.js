@@ -132,7 +132,7 @@ const users = {
   getEventsLive: (user, type, limit) =>
     new Promise((resolve, reject) => {
       const query = `query compra {
-        event(limit: 20, order_by: {timestamp: desc, id: desc}, where: {timestamp: {_is_null: false}, _or: [{creator_address: {_eq: "${user}"}}, {recipient_address: {_eq: "${user}"}}], event_type: {_eq: "ask_purchase"}}, offset: 0) {
+        event(limit: 30, order_by: {timestamp: desc, id: desc}, where: {timestamp: {_is_null: false}, _or: [{creator_address: {_eq: "${user}"}}, {recipient_address: {_eq: "${user}"}}], event_type: {_eq: "ask_purchase"}}, offset: 0) {
           id
           price
           amount
@@ -151,6 +151,9 @@ const users = {
             thumbnail_uri
             fa_contract
             token_id
+          }
+          fa {
+            name
           }
         }
       }`
