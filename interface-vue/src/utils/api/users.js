@@ -82,21 +82,45 @@ const users = {
     }),
     getTransactions: user =>
      new Promise((resolve, reject) => {
-      const query = `query rondo{
-        sender { address:"${user}"}}
-        parameter{
-          value
-        }
-      }`
       
-      fetch('https://api.jakartanet.tzkt.io/v1/accounts/', {
-        ...options,
-        body: JSON.stringify({ query }),
-      })
+      fetch(`https://api.jakartanet.tzkt.io/v1/accounts/${user}/operations?entrypoint=collect&target=KT1MbXntDHjtwYwu3YEpJy9FRciGuku1XD8u&type=transaction`)
         .then(res => res.json())
-        .then(res => resolve(res.data))
+        .then(res => resolve(res))
         .catch(err => reject(err))
      }),
+
+    //  [
+    //   {
+    //     "type": "transaction",
+    //     "id": 15499869,
+    //     "level": 572015,
+    //     "timestamp": "2022-08-11T13:52:41Z",
+    //     "block": "BLyY6t1hx5L1NzLCsTuqHM6jERrUqsoEdV4e1FWdBFyXzskj4w4",
+    //     "hash": "opBPbregkB5MkLw47q52st57iYg1q46hrCp3v8ENxwhmqq3W2f3",
+    //     "counter": 580115,
+    //     "sender": {
+    //       "address": "tz1UHPc5kAZU5Gsc9Kvbqgpb8qMHsnVysMWE"
+    //     },
+    //     "gasLimit": 9456,
+    //     "gasUsed": 4373,
+    //     "storageLimit": 67,
+    //     "storageUsed": 0,
+    //     "bakerFee": 1251,
+    //     "storageFee": 0,
+    //     "allocationFee": 0,
+    //     "target": {
+    //       "address": "KT1MbXntDHjtwYwu3YEpJy9FRciGuku1XD8u"
+    //     },
+    //     "targetCodeHash": -348483484,
+    //     "amount": 1000000,
+    //     "parameter": {
+    //       "entrypoint": "collect",
+    //       "value": "2"
+    //     },
+    //     "status": "applied",
+    //     "hasInternals": true
+    //   }
+    // ]
 
   getUserById: id =>
     new Promise((resolve, reject) => {
