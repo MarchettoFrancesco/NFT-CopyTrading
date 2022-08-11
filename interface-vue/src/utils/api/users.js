@@ -80,6 +80,24 @@ const users = {
       //     "__typename": "sales_stat"
       //   }
     }),
+    getTransactions: user =>
+     new Promise((resolve, reject) => {
+      const query = `query rondo{
+        sender { address:"${user}"}}
+        parameter{
+          value
+        }
+      }`
+      
+      fetch('https://api.jakartanet.tzkt.io/v1/accounts/', {
+        ...options,
+        body: JSON.stringify({ query }),
+      })
+        .then(res => res.json())
+        .then(res => resolve(res.data))
+        .catch(err => reject(err))
+     }),
+
   getUserById: id =>
     new Promise((resolve, reject) => {
       const query = `query getUserById {

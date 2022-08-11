@@ -38,4 +38,16 @@ export const mintNFT = ({ Tezos, amount, metadata }) => {
 		}
 	};
 };
+export const collectNFT =({collect}) => {
+	return async (dispatch) => {
+		try {
+			const contract = await Tezos.wallet.at(config.contractAddress);
+      const op = await contract.methods.collect(collect)
+			await op.confirmation();
+
+		} catch (e) {
+			console.log(e);
+		}
+	};
+};
 export const _ = null
