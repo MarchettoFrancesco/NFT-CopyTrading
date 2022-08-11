@@ -138,7 +138,9 @@
 <script>
 import { mdiAlertOutline, mdiCloudUploadOutline, mdiCamera } from '@mdi/js'
 import { ref } from '@vue/composition-api'
-import { NFTStorage, File } from 'nft.storage/dist/bundle.esm.min.js'
+import { NFTStorage } from 'nft.storage/dist/bundle.esm.min.js'
+import { tezos } from '@/utils/tezos'
+import { config } from '@/utils'
 
 const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJlODQ1QmE3OTZEMmU5YTRGNzY5YjFhMjEwNjZDQzQwNGIzN2Q1N0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MDEyNDMwMDEzMiwibmFtZSI6ImFwaGVsaW9zIn0.546qPlU6ENvYHwcollzJlA-_kfIuZxT8OAm7QfgyWxs'
 
@@ -162,6 +164,7 @@ export default {
       symbol: '',
       filesContent: null,
       files: null,
+      url: '',
     }
   },
   methods: {
@@ -173,14 +176,24 @@ export default {
     },
     async mint() {
       console.log(this.filesContent)
-      const metadata = await nftstorage.store({
+      const { url } = await nftstorage.store({
         name: this.name,
         description: this.description,
         decimals: 0,
         symbol: this.symbol,
         image: this.filesContent,
       })
-      console.log(metadata)
+      let metadata = ''
+      const contract = await tezos.wallet.at(config.contractAddress)
+
+      for (let i = 0; i < url.length; i++) {
+        metadata += url
+          .charCodeAt(i)
+          .toString(16)
+          .slice(-4)
+      }
+      const op = await contract.methods.mint(this.amount, metadata).send()
+      await op.confirmation()
     },
   },
   setup(props) {
