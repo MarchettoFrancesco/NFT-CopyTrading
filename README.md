@@ -36,3 +36,6 @@
 
 token : KT1D8jZ4MUrjCkFCzkwBRHRx8mMGZDrUCQiE
 marketplace: KT1RwvNFfCSNAefPeDEsC7ns6W39fcTGeysh
+
+
+in the account settings we tried to do the copytrade algorithm, so we minted nfts and created traffic but got a beacon error so in conclusion this is the final project that still enables to look for activities and copy strategy!
