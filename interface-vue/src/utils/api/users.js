@@ -80,18 +80,18 @@ const users = {
       //     "__typename": "sales_stat"
       //   }
     }),
-  getTransactions: ({ user, contract }) =>
+  getTransactions: ({ user, contract, start }) =>
     new Promise((resolve, reject) => {
       fetch(
-        `https://api.jakartanet.tzkt.io/v1/accounts/${user}/operations?entrypoint=collect&target=${contract}&type=transaction`,
+        `https://api.jakartanet.tzkt.io/v1/accounts/${user}/operations?entrypoint=collect&target=${contract}&type=transaction&timestamp.gt=${start}`,
       )
         .then(res => res.json())
         .then(res => resolve(res))
         .catch(err => reject(err))
     }),
-  getTokenDetails: ({ contract, id }) =>
+  getTokenDetails: ({ contract, token_id }) =>
     new Promise((resolve, reject) => {
-      fetch(`https://api.jakartanet.tzkt.io/v1/contracts/${contract}/bigmaps/data/keys?key=${id}`)
+      fetch(`https://api.jakartanet.tzkt.io/v1/contracts/${contract}/bigmaps/data/keys?key=${token_id}`)
         .then(res => res.json())
         .then(res => resolve(res))
         .catch(err => reject(err))
@@ -213,7 +213,10 @@ const users = {
         body: JSON.stringify({ query }),
       })
         .then(res => res.json())
-        .then(res => resolve(res.data.event))
+        .then(res => {
+          console.log(res.data.event)
+          resolve(res.data.event)
+        })
         .catch(err => reject(err))
 
       // data: {event: [,…]}

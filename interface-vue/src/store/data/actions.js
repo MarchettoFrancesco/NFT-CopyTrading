@@ -67,6 +67,27 @@ export async function getUserData({ commit, state }, { address, following }) {
   }
   return
 }
+// export async function getTkndetails({ commit, state }, address) {
+//   const i = state.users.findIndex(user => user.address === address)
+//   // user not  found
+//   if (i === -1) return
+
+//   let lastUpdate = state.users[i].lastUpdate
+//   const now = new Date()
+//   const nexUpdate = new Date(lastUpdate)
+//   nexUpdate.setMinutes(nexUpdate.getMinutes() + 1)
+//   if (!lastUpdate || lastUpdate - now < lastUpdate - nexUpdate) {
+//     const tkndt = await API.users.getTokenDetails(address).then(res =>
+//       res.map(ele => {
+//           return {
+//             value: ele.parameter.value,
+//             sender: ele.sender.address,
+//           }})) }
+//           let users = JSON.parse(JSON.stringify(state.users))
+//           users[i] = { ...users[i], tkndt, lastUpdate: now }
+//           commit('setUsers', users)
+//       }
+
 export async function getUserTransactions({ commit, state }, address) {
   const i = state.users.findIndex(user => user.address === address)
   // user not  found
@@ -79,26 +100,19 @@ export async function getUserTransactions({ commit, state }, address) {
   if (!lastUpdate || lastUpdate - now < lastUpdate - nexUpdate) {
     const transactions = await API.users.getEventsLive(address).then(res =>
       res.map(ele => {
-        if(address == ele.creator.address){
-          return {
-              from: ele.creator.alias ?? ele.creator.address,
-              to: ele.recipient.alias ?? ele.recipient.address,
-              price: ele.price,
-              preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
-              name: ele.fa.name,
-              event_type: 'sold',
-            }
-          } else {
-            return {
-              from: ele.creator.alias ?? ele.creator.address,
-              to: ele.recipient.alias ?? address,
-              price: ele.price,
-              preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
-              name: ele.fa.name,
-              event_type: 'bought',
-            }
-          }
-         }))
+        let data = {
+          from: ele.creator.alias ?? ele.creator.address,
+          to: ele.recipient.alias ?? ele.recipient.address,
+          price: ele.price,
+          preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
+          name: ele.fa.name,
+          event_type: 'bought',
+          link: `https://objkt.com/asset/${ele.token.fa_contract}/${ele.token.token_id}`,
+        }
+        if (address == ele.creator.address) data.event_type = 'sold'
+        return data
+      }),
+    )
     let users = JSON.parse(JSON.stringify(state.users))
     users[i] = { ...users[i], transactions, lastUpdate: now }
     commit('setUsers', users)

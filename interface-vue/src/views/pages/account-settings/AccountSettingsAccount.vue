@@ -50,16 +50,19 @@
             <v-text-field v-model="symbol" dense label="Symbol" outlined></v-text-field>
           </v-col>
 
-          <v-col cols="12">
+          <v-col cols="12" md="12">
             <v-btn color="primary" class="me-3 mt-4" @click="mint">
               Mint
             </v-btn>
             <v-btn color="secondary" outlined class="me-3 mt-4" type="reset" @click.prevent="resetForm">
               Cancel
             </v-btn>
-            <v-btn color="primary" class="me-3 mt-4" @click="">
+          </v-col>
+          <v-col md="6" cols="12">
+            <v-btn color="primary" class="me-3 mt-4" @click="copy(user)">
               Start NFT Copy Trading
             </v-btn>
+            <v-text-field class="me-3 mt-4" v-model="user" label="Address" dense outlined></v-text-field>
           </v-col>
         </v-row>
       </v-form>
@@ -117,7 +120,7 @@ export default {
   props: {
     accountData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -130,7 +133,9 @@ export default {
       filesContent: null,
       files: null,
       url: '',
+      user: '',
       tokens: [],
+      follow: {},
     }
   },
   methods: {
@@ -161,12 +166,45 @@ export default {
       const op = await contract.methods.mint(this.amount, metadata).send()
       await op.confirmation()
     },
-    async collect(id, amount) {
+    async collect(id, amount, cb) {
+      console.log(id, amount)
       const contract = await tezos.wallet.at(config.contractAddress)
       const op = await contract.methods.collect(id).send({ amount: amount / 1, mutez: true })
       await op.confirmation(1)
       const ap = await contract.methods.update_token(id).send()
       await ap.confirmation(1)
+      cb()
+    },
+    copy(user) {
+      console.log('start/restar copy')
+      const contract = 'KT1RwvNFfCSNAefPeDEsC7ns6W39fcTGeysh'
+      const follow = { ...this.follow }
+      const now = new Date()
+      const start = now.toISOString()
+      if (follow[user]) clearInterval(follow[user])
+      follow[user] = setInterval(() => {
+        API.users
+          .getTransactions({
+            user: user,
+            contract,
+            start,
+          })
+          .then(res => {
+            if (res.length > 0) {
+              const token_id = res[0].parameter.value / 1
+              return API.users.getTokenDetails({ contract, token_id })
+            }
+            return {}
+          })
+          .then(res => {
+
+            if (Array.isArray(res)) {
+              clearInterval(follow[user])
+              this.collect(res[0].key / 1, res[0].value.amount / 1, this.copy(user))
+            }
+          })
+      }, 10000)
+      this.follow = follow
     },
   },
   setup(props) {

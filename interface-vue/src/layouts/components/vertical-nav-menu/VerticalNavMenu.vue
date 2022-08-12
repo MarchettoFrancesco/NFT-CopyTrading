@@ -52,7 +52,8 @@
         :to="{ name: 'pages-account-settings' }"
         :icon="icons.mdiAccountCogOutline"
       ></nav-menu-link>
-      <nav-menu-group
+      <nav-menu-section-title title="💎 💎 💎"></nav-menu-section-title>
+      <!-- <nav-menu-group
         title="Pages"
         :icon="icons.mdiFileOutline"
       >
@@ -97,7 +98,7 @@
         title="Form Layouts"
         :to="{ name: 'form-layouts' }"
         :icon="icons.mdiFormSelect"
-      ></nav-menu-link>
+      ></nav-menu-link> -->
     </v-list>
   </v-navigation-drawer>
 </template>

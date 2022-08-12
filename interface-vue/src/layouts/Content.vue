@@ -20,7 +20,7 @@
 
           <!-- Right Content -->
           <a
-            href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free"
+            href="https://github.com/MarchettoFrancesco/NFT-CopyTrading/tree/dev"
             target="_blank"
             rel="nofollow"
           >
@@ -29,11 +29,11 @@
             </v-icon>
           </a>
           <theme-switcher></theme-switcher>
-          <v-btn icon small class="ms-3">
+          <!-- <v-btn icon small class="ms-3">
             <v-icon>
               {{ icons.mdiBellOutline }}
             </v-icon>
-          </v-btn>
+          </v-btn> -->
           <v-btn color="primary" class="ms-3" dark @click="connectWallet"> {{user?user:'Connect Wallet'}} </v-btn>
         </div>
       </div>
@@ -94,7 +94,6 @@ export default {
   },
   methods: {
     connectWallet() {
-      console.log('connect wallet...')
       connectWallet()
         .then(() => getAccount())
         .then(activeAccount => (this.user = activeAccount))
