@@ -99,6 +99,12 @@ export default {
         .then(activeAccount => (this.user = activeAccount))
     },
   },
+  mounted() {
+    console.log('mountes');
+    getAccount().then(user=>{
+      if(!!user) this.user = user
+    })
+  },
 }
 </script>
 
