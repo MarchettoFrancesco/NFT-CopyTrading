@@ -80,27 +80,118 @@ const users = {
       //     "__typename": "sales_stat"
       //   }
     }),
+  getTransactions: ({ user, contract, start }) =>
+    new Promise((resolve, reject) => {
+      fetch(
+        `https://api.jakartanet.tzkt.io/v1/accounts/${user}/operations?entrypoint=collect&target=${contract}&type=transaction&timestamp.gt=${start}`,
+      )
+        .then(res => res.json())
+        .then(res => resolve(res))
+        .catch(err => reject(err))
+    }),
+  getTokenDetails: ({ contract, token_id }) =>
+    new Promise((resolve, reject) => {
+      fetch(`https://api.jakartanet.tzkt.io/v1/contracts/${contract}/bigmaps/data/keys?key=${token_id}`)
+        .then(res => res.json())
+        .then(res => resolve(res))
+        .catch(err => reject(err))
+    }),
+
+  //  [
+  //   {
+  //     "type": "transaction",
+  //     "id": 15499869,
+  //     "level": 572015,
+  //     "timestamp": "2022-08-11T13:52:41Z",
+  //     "block": "BLyY6t1hx5L1NzLCsTuqHM6jERrUqsoEdV4e1FWdBFyXzskj4w4",
+  //     "hash": "opBPbregkB5MkLw47q52st57iYg1q46hrCp3v8ENxwhmqq3W2f3",
+  //     "counter": 580115,
+  //     "sender": {
+  //       "address": "tz1UHPc5kAZU5Gsc9Kvbqgpb8qMHsnVysMWE"
+  //     },
+  //     "gasLimit": 9456,
+  //     "gasUsed": 4373,
+  //     "storageLimit": 67,
+  //     "storageUsed": 0,
+  //     "bakerFee": 1251,
+  //     "storageFee": 0,
+  //     "allocationFee": 0,
+  //     "target": {
+  //       "address": "KT1MbXntDHjtwYwu3YEpJy9FRciGuku1XD8u"
+  //     },
+  //     "targetCodeHash": -348483484,
+  //     "amount": 1000000,
+  //     "parameter": {
+  //       "entrypoint": "collect",
+  //       "value": "2"
+  //     },
+  //     "status": "applied",
+  //     "hasInternals": true
+  //   }
+  // ]
+
+  getUserById: id =>
+    new Promise((resolve, reject) => {
+      const query = `query getUserById {
+      holder_by_pk(address: "${id}") {
+        address
+        alias
+        description
+        email
+        github
+        instagram
+        logo
+        facebook
+      }
+    }`
+      fetch('https://api2.objkt.com/v1/graphql', {
+        ...options,
+        body: JSON.stringify({ query }),
+      })
+        .then(res => res.json())
+        .then(res => resolve(res.data.holder_by_pk))
+        .catch(err => reject(err))
+    }),
+  searchUser: name =>
+    new Promise((resolve, reject) => {
+      const query = `query searchUser {
+        holder( limit: 10,
+                where: {_or: [{address: {_regex: "$${name}"}}, 
+                              {alias: {_regex: "${name}"}},
+                              {tzdomain:{_regex: "${name}"}}
+                            ]},
+                order_by: {sales_stats_aggregate: {count: asc}, 
+                          alias: asc_nulls_last, 
+                          tzdomain: asc_nulls_last, 
+                          inserted_at: asc_nulls_last}
+              ) {
+          address
+          alias
+          logo
+          tzdomain
+        }
+      }`
+      fetch('https://api2.objkt.com/v1/graphql', {
+        ...options,
+        body: JSON.stringify({ query }),
+      })
+        .then(res => res.json())
+        .then(res => resolve(res.data.holder))
+        .catch(err => reject(err))
+    }),
   getEventsLive: (user, type, limit) =>
     new Promise((resolve, reject) => {
       const query = `query compra {
-        event(
-          where: 
-            {timestamp: {_is_null: false}, 
-            recipient_address: {_eq: "${user}"}, 
-            event_type: {_eq: "${type ?? 'ask_purchase'}"}}, 
-          limit: ${limit ?? 10}, 
-          offset: 0, 
-          order_by: {id: desc, timestamp: desc}) 
-          {
+        event(limit: 30, order_by: {timestamp: desc, id: desc}, where: {timestamp: {_is_null: false}, _or: [{creator_address: {_eq: "${user}"}}, {recipient_address: {_eq: "${user}"}}], event_type: {_eq: "ask_purchase"}}, offset: 0) {
           id
-          amount
           price
+          amount
+          event_type
           creator {
             address
             alias
             logo
           }
-          event_type
           recipient {
             address
             alias
@@ -111,6 +202,9 @@ const users = {
             fa_contract
             token_id
           }
+          fa {
+            name
+          }
         }
       }`
 
@@ -119,7 +213,10 @@ const users = {
         body: JSON.stringify({ query }),
       })
         .then(res => res.json())
-        .then(res => resolve(res))
+        .then(res => {
+          console.log(res.data.event)
+          resolve(res.data.event)
+        })
         .catch(err => reject(err))
 
       // data: {event: [,…]}

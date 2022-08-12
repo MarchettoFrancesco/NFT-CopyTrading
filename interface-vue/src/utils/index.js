@@ -18,5 +18,7 @@ export const useRouter = () => {
 
   return { ...toRefs(state), router: vm.$router }
 }
-
-export const _ = null
+export const config = {
+  contractAddress : "KT1RwvNFfCSNAefPeDEsC7ns6W39fcTGeysh", 
+  tokenAddress: "KT1D8jZ4MUrjCkFCzkwBRHRx8mMGZDrUCQiE"
+}

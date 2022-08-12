@@ -20,7 +20,7 @@
 
           <!-- Right Content -->
           <a
-            href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free"
+            href="https://github.com/MarchettoFrancesco/NFT-CopyTrading/tree/dev"
             target="_blank"
             rel="nofollow"
           >
@@ -29,11 +29,11 @@
             </v-icon>
           </a>
           <theme-switcher></theme-switcher>
-          <v-btn icon small class="ms-3">
+          <!-- <v-btn icon small class="ms-3">
             <v-icon>
               {{ icons.mdiBellOutline }}
             </v-icon>
-          </v-btn>
+          </v-btn> -->
           <v-btn color="primary" class="ms-3" dark @click="connectWallet"> {{user?user:'Connect Wallet'}} </v-btn>
         </div>
       </div>
@@ -49,8 +49,8 @@
       <div class="boxed-container w-full">
         <div class="mx-6 d-flex justify-space-between">
           <span>
-            &copy; 2021
-            <a href="https://themeselection.com" class="text-decoration-none" target="_blank">ThemeSelection</a></span
+            &copy; 2022
+            <a href="https://themeselection.com" class="text-decoration-none" target="_blank">Aphelios</a></span
           >
           <span class="d-sm-inline d-none">
             <a
@@ -94,11 +94,16 @@ export default {
   },
   methods: {
     connectWallet() {
-      console.log('connect wallet...')
       connectWallet()
         .then(() => getAccount())
         .then(activeAccount => (this.user = activeAccount))
     },
+  },
+  mounted() {
+    console.log('mountes');
+    getAccount().then(user=>{
+      if(!!user) this.user = user
+    })
   },
 }
 </script>

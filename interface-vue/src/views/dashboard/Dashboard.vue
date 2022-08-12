@@ -1,43 +1,23 @@
 <template>
   <v-row>
-    <v-col
-      cols="12"
-      md="4"
-    >
+    <v-col cols="12" md="4">
       <dashboard-congratulation-john></dashboard-congratulation-john>
     </v-col>
-    <v-col
-      cols="12"
-      md="8"
-    >
+    <v-col cols="12" md="8">
       <dashboard-statistics-card></dashboard-statistics-card>
     </v-col>
 
-    <v-col
-      cols="12"
-      sm="6"
-      md="3"
-    >
-      <dashboard-weekly-overview></dashboard-weekly-overview>
+    <v-col cols="12" sm="6" md="3">
+      <dashboard-weekly-overview :following="following" @click="getDataUser"></dashboard-weekly-overview>
     </v-col>
 
-    <v-col
-      cols="12"
-      md="9"
-      sm="6"
-    >
-      <dashboard-card-total-earning></dashboard-card-total-earning>
+    <v-col cols="12" md="9" sm="6">
+      <dashboard-card-total-earning :activity="eventsLive"></dashboard-card-total-earning>
     </v-col>
 
-    <v-col
-      cols="12"
-      md="4"
-    >
+    <!-- <v-col cols="12" md="4">
       <v-row class="match-height">
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="totalProfit.change"
             :color="totalProfit.color"
@@ -47,10 +27,7 @@
             :subtitle="totalProfit.subtitle"
           ></statistics-card-vertical>
         </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="totalSales.change"
             :color="totalSales.color"
@@ -60,10 +37,7 @@
             :subtitle="totalSales.subtitle"
           ></statistics-card-vertical>
         </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="newProject.change"
             :color="newProject.color"
@@ -74,10 +48,7 @@
           ></statistics-card-vertical>
         </v-col>
 
-        <v-col
-          cols="12"
-          sm="6"
-        >
+        <v-col cols="12" sm="6">
           <statistics-card-vertical
             :change="salesQueries.change"
             :color="salesQueries.color"
@@ -90,21 +61,15 @@
       </v-row>
     </v-col>
 
-    <v-col
-      cols="12"
-      md="4"
-    >
+    <v-col cols="12" md="4">
       <dashboard-card-sales-by-countries></dashboard-card-sales-by-countries>
     </v-col>
-    <v-col
-      cols="12"
-      md="8"
-    >
+    <v-col cols="12" md="8">
       <dashboard-card-deposit-and-withdraw></dashboard-card-deposit-and-withdraw>
     </v-col>
     <v-col cols="12">
       <dashboard-datatable></dashboard-datatable>
-    </v-col>
+    </v-col> -->
   </v-row>
 </template>
 
@@ -112,6 +77,8 @@
 // eslint-disable-next-line object-curly-newline
 import { mdiPoll, mdiLabelVariantOutline, mdiCurrencyUsd, mdiHelpCircleOutline } from '@mdi/js'
 import StatisticsCardVertical from '@/components/statistics-card/StatisticsCardVertical.vue'
+import { API } from '/src/utils/API.js'
+import { mapActions, mapGetters } from 'vuex'
 
 // demos
 import DashboardCongratulationJohn from './DashboardCongratulationJohn.vue'
@@ -121,6 +88,7 @@ import DashboardCardDepositAndWithdraw from './DashboardCardDepositAndWithdraw.v
 import DashboardCardSalesByCountries from './DashboardCardSalesByCountries.vue'
 import DashboardWeeklyOverview from './DashboardWeeklyOverview.vue'
 import DashboardDatatable from './DashboardDatatable.vue'
+
 
 export default {
   components: {
@@ -176,6 +144,34 @@ export default {
       totalSales,
       newProject,
       salesQueries,
+    }
+  },
+  data() {
+    return {
+      selected: null,
+    }
+  },
+  mounted() {
+    if (localStorage.singleSelect) {
+      Object.entries(JSON.parse(localStorage.singleSelect))
+        .filter(([key, value]) => value) // detele follow false
+        .forEach(async ([address, val]) => {
+          this.getUserData({ address, following: val })
+        }) // left only address
+    }
+  },
+  methods: {
+    ...mapActions('data', ['getUserData', 'getUserTransactions']),
+    getDataUser(userId) {
+      this.getUserTransactions(userId)
+      this.selected = userId
+      
+    },
+  },
+  computed: {
+    ...mapGetters('data', ['following']),
+    eventsLive(){
+      return this.following.find(user => user.address === this.selected)?.transactions??[]
     }
   },
 }

@@ -42,7 +42,7 @@ import { ref } from '@vue/composition-api'
 
 // demos
 import AccountSettingsAccount from './AccountSettingsAccount.vue'
-import AccountSettingsSecurity from './AccountSettingsSecurity.vue'
+ import AccountSettingsSecurity from './AccountSettingsSecurity.vue'
 import AccountSettingsInfo from './AccountSettingsInfo.vue'
 
 export default {
@@ -57,8 +57,8 @@ export default {
     // tabs
     const tabs = [
       { title: 'Account', icon: mdiAccountOutline },
-      { title: 'Security', icon: mdiLockOpenOutline },
-      { title: 'Info', icon: mdiInformationOutline },
+      // { title: 'Security', icon: mdiLockOpenOutline },
+      // { title: 'Info', icon: mdiInformationOutline },
     ]
 
     // account settings data
