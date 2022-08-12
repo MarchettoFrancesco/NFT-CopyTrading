@@ -82,7 +82,7 @@ export async function getUserTransactions({ commit, state }, address) {
         if(address == ele.creator.address){
           return {
               from: ele.creator.alias ?? ele.creator.address,
-              to: ele.recipient.alias ?? address,
+              to: ele.recipient.alias ?? ele.recipient.address,
               price: ele.price,
               preview: `https://ipfs.io/${ele.token.thumbnail_uri.replace(':/', '')}`,
               name: ele.fa.name,
