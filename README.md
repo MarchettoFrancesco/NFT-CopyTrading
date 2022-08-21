@@ -46,3 +46,5 @@ Running in Jakartanet testnet
 - marketplace: KT1RwvNFfCSNAefPeDEsC7ns6W39fcTGeysh
 
 In the account settings we tried to do the copytrade algorithm, so we minted nfts and created traffic but got a beacon error so in conclusion this is the final project.
+
+<a src="https://www.youtube.com/watch?v=Uu2XwYnmgGs"> Demo video </a>
