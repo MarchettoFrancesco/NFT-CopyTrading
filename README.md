@@ -1,7 +1,9 @@
 # NFT-CopyTrading
 
 This is an NFT-copytrader running on the tezos blockchain, we use objkt graphiql API to get data, you can follow biggest creators and sellers and analize their strategy seamlessly, furthermore there is a marketplace section where you can mint NFTs and collect them.
-UI was designed to be scalable and efficient, built in Vue.js, smart contracts were written in Python, and got ispiration from Anshu and teia.
+UI was designed to be scalable and efficient, built in Vue.js, smart contracts were written in Python, inspiration from Anshu and teia.
+
+<a href="https://www.youtube.com/watch?v=Uu2XwYnmgGs"> Check out the Demo Video on <img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="YouTube" height="30" width="40" /> </a>
 
 ## Installation ⚒️
 
@@ -47,4 +49,4 @@ Running in Jakartanet testnet
 
 In the account settings we tried to do the copytrade algorithm, so we minted nfts and created traffic but got a beacon error so in conclusion this is the final project.
 
-<a href="https://www.youtube.com/watch?v=Uu2XwYnmgGs"> Demo video </a>
+
