@@ -49,4 +49,6 @@ Running in Jakartanet testnet
 
 In the account settings we tried to do the copytrade algorithm, so we minted nfts and created traffic but got a beacon error so in conclusion this is the final project.
 
+## Award Contract Address
 
+https://tzkt.io/KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton/tokens/777964
